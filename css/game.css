@@ -12,13 +12,14 @@ th, td {
 .alive{
   background-color: green;
 }
-.container{
+.controls{
   position: absolute;
   left:50%;
+  transform:translateX(-50%);
   margin-top: 10px;
 }
 .material-icons{
-
+  margin-left:5px;
   background-color: black;
   color:green;
 }

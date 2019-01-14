@@ -5,6 +5,10 @@ const GRID_ROWS = 32;
 const GRID_COLS = 64;
 const GRID_SPEED = 100;
 
+const grid = createGrid(GRID_ROWS,GRID_COLS);
+const nextGrid = createGrid(GRID_ROWS,GRID_COLS);
+console.log(grid);
+
 let isPlaying = false;
 const root = document.getElementById('root');
 const table = createTable(GRID_ROWS,GRID_COLS);
@@ -48,18 +52,50 @@ function createControls(){
   const startButton = document.createElement('button');
   startButton.className = 'material-icons';
   startButton.textContent = 'play_arrow';
+  startButton.addEventListener('click',function(){
+    if(isPlaying){
+      isPlaying = false;
+      this.textContent = 'play_arrow';
+    }
+    else{
+      isPlaying = true;
+      this.textContent = 'pause';
+
+    }
+  });
 
   const resetButton = document.createElement('button');
   resetButton.className = 'material-icons';
   resetButton.textContent = 'replay';
+  resetButton.addEventListener('click',function(){
+    isPlaying = false;
+    startButton.textContent = 'play_arrow';
+  });
 
   const randomizeButton = document.createElement('button');
   randomizeButton.className = 'material-icons';
   randomizeButton.textContent = 'transform';
+  randomizeButton.addEventListener('click',function(){
+    isPlaying = false;
+    startButton.textContent = 'play_arrow';
+
+  });
 
   const container = document.createElement('div');
   container.className = 'controls';
+
   container.append(startButton,resetButton,randomizeButton);
+
   root.appendChild(container);
 
+}
+
+function createGrid(rows,cols){
+  const grid = [];
+  for (let i = 0; i < rows; i++) {
+    grid[i] = [];
+    for (let j = 0; j < cols; j++) {
+    
+    }
+  }
 }
