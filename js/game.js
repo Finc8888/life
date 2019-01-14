@@ -19,6 +19,19 @@ function handleClick(){
 }
 
 createControls();
+
+function updateView(){
+  for (let i = 0; i < grid.length; i++) { 
+
+    for (let j = 0; j < grid[i].length; j++) {
+        const cell = table.rows[i].cells[j];
+        const isCellAlive = grid[i][j];
+
+        cell.classList.toggle('alive',isCellAlive);
+    }
+
+  }
+}
 function createTable(rows,cols){
   const table = document.createElement('table');
 
@@ -42,8 +55,16 @@ function createTable(rows,cols){
   }
   table.addEventListener('click',event =>{
     if(!event.target.classList.contains('cell') ) return;
+
     const cell = event.target;
-    cell.classList.toggle('alive');
+    const rowIndex = cell.parentNode.rowIndex;
+    const cellIndex = cell.cellIndex;
+    const isCellAlive = grid[rowIndex][cellIndex] ===1 ? true : false;
+
+    grid[rowIndex][cellIndex] = isCellAlive ? 0 : 1;
+
+    cell.classList.toggle('alive',!isCellAlive);
+    console.log(grid);
   })
   root.appendChild(table);
   return table;
@@ -79,6 +100,9 @@ function createControls(){
     isPlaying = false;
     startButton.textContent = 'play_arrow';
 
+    randomizeGrid();
+    updateView()
+
   });
 
   const container = document.createElement('div');
@@ -92,10 +116,21 @@ function createControls(){
 
 function createGrid(rows,cols){
   const grid = [];
+
   for (let i = 0; i < rows; i++) {
     grid[i] = [];
+
     for (let j = 0; j < cols; j++) {
-    
+        grid[i][j] = 0;
+    }
+  }
+  return grid;
+}
+function randomizeGrid(){
+  for (let i = 0; i < grid.length; i++) {
+
+    for (let j = 0; j < grid[i].length; j++) {
+        grid[i][j] = Math.round(Math.random());
     }
   }
 }
