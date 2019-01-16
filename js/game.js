@@ -20,6 +20,10 @@ function handleClick(){
 
 createControls();
 
+function play(){
+  computeNextGrid();
+  updateView();
+}
 function updateView(){
   for (let i = 0; i < grid.length; i++) { 
 
@@ -81,6 +85,7 @@ function createControls(){
     else{
       isPlaying = true;
       this.textContent = 'pause';
+      play();
 
     }
   });
@@ -91,6 +96,9 @@ function createControls(){
   resetButton.addEventListener('click',function(){
     isPlaying = false;
     startButton.textContent = 'play_arrow';
+
+    resetGrid();
+    updateView();
   });
 
   const randomizeButton = document.createElement('button');
@@ -101,7 +109,7 @@ function createControls(){
     startButton.textContent = 'play_arrow';
 
     randomizeGrid();
-    updateView()
+    updateView();
 
   });
 
@@ -133,4 +141,97 @@ function randomizeGrid(){
         grid[i][j] = Math.round(Math.random());
     }
   }
+}
+function resetGrid(){
+  for (let i = 0; i < grid.length; i++) {
+
+    for (let j = 0; j < grid[i].length; j++) {
+        grid[i][j] = 0;
+    }
+  }
+}
+function computeNextGrid(){
+    for (let i = 0; i < grid.length; i++) {
+
+    for (let j = 0; j < grid[i].length; j++) {
+        applyRules(i,j);
+    }
+  }
+  copyNextGrid();
+}
+
+function copyNextGrid(){
+   for (let i = 0; i < grid.length; i++) {
+
+    for (let j = 0; j < grid[i].length; j++) {
+        grid[i][j] = nextGrid[i][j];
+        nextGrid[i][j] = 0;
+    }
+  }
+  // copyNextGrid();
+}
+
+function applyRules(row,col){
+  const isCellAlive = grid[row][col];
+  const numberOfNeighborgs = countNeighborgs(row,col);
+
+  if(isCellAlive){
+    if(numberOfNeighborgs < 2){
+      //cell dies
+      nextGrid[row][col] = 0;
+    }
+    else if(numberOfNeighborgs === 2 || numberOfNeighborgs === 3){
+    //cell lives
+    nextGrid[row][col] = 1;
+    }
+    else if(numberOfNeighborgs > 3){
+    //cell dies
+    nextGrid[row][col] = 0;
+    }
+  }
+  else{
+    if(numberOfNeighborgs === 3){
+      //cell lives
+      nextGrid[row][col] = 1;
+    }
+
+  }
+  
+}
+function countNeighborgs(row,col){
+  let count = 0;
+
+  if(row-1 >= 0){//top
+    if(grid[row - 1][col] ===1) count++;
+  }
+
+  if(row - 1 >= 0 && col - 1 >= 0){//top left
+    if(grid[row - 1][col - 1] ===1) count++;
+  }
+
+  if(row-1 >= 0 && col + 1 < GRID_COLS){//top right
+    if(grid[row - 1][col +1] ===1) count++;
+  }
+
+   if(col-1 >= 0){//left
+    if(grid[row][col - 1] ===1) count++;
+  }
+
+   if(col + 1 < GRID_COLS){//right
+    if(grid[row][col + 1] ===1) count++;
+  }
+
+   if(row + 1 < GRID_ROWS){//bottom
+    if(grid[row + 1][col] ===1) count++;
+  }
+
+   if(row + 1 < GRID_ROWS && col-1 >= 0){//bottom left
+    if(grid[row + 1][col - 1] ===1 ) count++;
+  }
+
+   if(row + 1 < GRID_ROWS && col+1 < GRID_COLS){//bottom left
+    if(grid[row + 1][col + 1] ===1 ) count++;
+  }
+
+  return count;
 }
